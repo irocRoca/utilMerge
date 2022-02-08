@@ -18,3 +18,15 @@ export const getTable = async (data) => {
     console.log(err);
   }
 };
+
+export const getMergedTable = async (data) => {
+  try {
+    const res = await axios.post("api/join", data, {
+      headers: { "Content-type": "application/json" },
+    });
+    console.log(res);
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+};

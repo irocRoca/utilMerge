@@ -16,31 +16,32 @@ const BasicTable = ({ data }) => {
         <TableHead>
           <TableRow>
             {Object.keys(data).map((columnName, index) => (
-              <TableCell align={index === 0 ? "" : "right"}>
+              <TableCell
+                align={index === 0 ? "left" : "right"}
+                key={columnName}
+              >
                 {columnName}
               </TableCell>
             ))}
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody sx={{ height: 600, overflow: "scroll" }}>
           {Object.values(data[Object.keys(data)[0]]).map((_, index) => (
-            <>
-              <TableRow
-                key={index}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                {Object.keys(data).map((colName, sInx) => (
-                  <TableCell
-                    key={`${index} + ${sInx}`}
-                    component={sInx === 0 ? "th" : ""}
-                    scope={sInx === 0 ? "row" : ""}
-                    align={sInx === 0 ? "" : "right"}
-                  >
-                    {data[colName][index]}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </>
+            <TableRow
+              key={index}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              {Object.keys(data).map((colName, sInx) => (
+                <TableCell
+                  key={`${index}${sInx}`}
+                  component={sInx === 0 ? "th" : ""}
+                  scope={sInx === 0 ? "row" : ""}
+                  align={sInx === 0 ? "left" : "right"}
+                >
+                  {data[colName][index]}
+                </TableCell>
+              ))}
+            </TableRow>
           ))}
         </TableBody>
       </Table>

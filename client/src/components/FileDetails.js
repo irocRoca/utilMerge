@@ -7,7 +7,7 @@ const Input = styled("input")({
   display: "none",
 });
 
-const FileDetails = ({ setFile, file }) => {
+const FileDetails = ({ setFile, file, index }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -17,10 +17,10 @@ const FileDetails = ({ setFile, file }) => {
 
   return (
     <>
-      <label htmlFor="contained-button-file">
+      <label htmlFor={index}>
         <Input
           accept=".csv"
-          id="contained-button-file"
+          id={index}
           multiple
           type="file"
           onChange={handleFileChange}

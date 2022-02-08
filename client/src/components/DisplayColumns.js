@@ -8,7 +8,7 @@ import { Box } from "@mui/material";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" aria-label="delete" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const DisplayColumns = ({ columns, setColumnFilter, columnFilter }) => {
+const DisplayColumns = ({ columns, setColumnFilter, columnFilter, label }) => {
   const handleColumnChange = (e) => {
     let value = e.target.textContent;
     if (e.target.tagName === "svg") {
@@ -21,7 +21,6 @@ const DisplayColumns = ({ columns, setColumnFilter, columnFilter }) => {
     else setColumnFilter(columnFilter.filter((item) => item !== value));
   };
 
-  console.log(columnFilter);
   return (
     <Box>
       <Autocomplete
@@ -46,7 +45,7 @@ const DisplayColumns = ({ columns, setColumnFilter, columnFilter }) => {
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Column Names"
+            label={label ? label : "Column Names"}
             placeholder="Select Columns"
           />
         )}

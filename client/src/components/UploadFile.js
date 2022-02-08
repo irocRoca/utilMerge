@@ -1,18 +1,28 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+
 import { useState } from "react";
 import FileDetails from "./FileDetails";
-
 import { getColumnNames, getTable } from "../services/fetchService";
 import DisplayColumns from "./DisplayColumns";
 
-const UploadFile = ({ file, setFile, setTable }) => {
+const UploadFile = ({
+  file,
+  setFile,
+  setTable,
+  index,
+  columnFilter,
+  setColumnFilter,
+  title,
+}) => {
   const [columns, setColumns] = useState(null);
-  const [columnFilter, setColumnFilter] = useState([]);
+  const [headerRow, setHeaderRow] = useState(1);
 
   const handleColumnSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
     data.append("file", file);
+    data.append("colIndex", headerRow - 1);
     const res = await getColumnNames(data);
     setColumns(res);
   };
@@ -22,11 +32,10 @@ const UploadFile = ({ file, setFile, setTable }) => {
     const data = new FormData();
     data.append("file", file);
     data.append("columns", columnFilter);
+    data.append("colIndex", headerRow - 1);
     const res = await getTable(data);
     setTable(res);
   };
-
-  console.log(columnFilter);
 
   return (
     <>
@@ -35,8 +44,20 @@ const UploadFile = ({ file, setFile, setTable }) => {
         encType="multipart/form-data"
         onSubmit={handleColumnSubmit}
       >
-        <h1>Upload File </h1>
-        <FileDetails setFile={setFile} file={file} />
+        <Typography
+          variant="h4"
+          gutterBottom
+          component="div"
+          sx={{
+            display: "flex",
+            alignContent: "center",
+            justifyContent: "center",
+          }}
+        >
+          <UploadFileIcon fontSize="large" sx={{ marginRight: 2 }} />
+          {title ? title : "Upload File"}
+        </Typography>
+        <FileDetails setFile={setFile} file={file} index={index} />
         <Box sx={{ width: 200, maxWidth: "100%", marginTop: 2 }}>
           <TextField
             id="outlined-number"
@@ -44,8 +65,9 @@ const UploadFile = ({ file, setFile, setTable }) => {
             type="number"
             size="small"
             helperText="If columns not found update this value"
-            defaultValue={1}
             fullWidth
+            value={headerRow}
+            onChange={(e) => setHeaderRow(e.target.value)}
           />
         </Box>
 
