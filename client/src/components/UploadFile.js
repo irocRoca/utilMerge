@@ -26,6 +26,8 @@ const UploadFile = ({ file, setFile, setTable }) => {
     setTable(res);
   };
 
+  console.log(columnFilter);
+
   return (
     <>
       <form

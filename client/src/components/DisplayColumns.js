@@ -5,22 +5,23 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { Box } from "@mui/material";
 
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" aria-label="delete" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const DisplayColumns = ({ columns, setColumnFilter, columnFilter }) => {
   const handleColumnChange = (e) => {
-    if (e.target.ariaSelected)
+    let value = e.target.textContent;
+    if (e.target.tagName === "svg") {
+      value = e.target.parentNode.firstChild.textContent;
+    } else if (e.target.tagName === "path") {
+      value = e.target.parentNode.parentNode.firstChild.textContent;
+    }
+    if (e.target.ariaSelected && !columnFilter.includes(e.target.textContent))
       setColumnFilter([...columnFilter, e.target.textContent]);
-    else if (
-      !e.target.ariaSelected &&
-      columnFilter.includes(e.target.textContent)
-    )
-      setColumnFilter(
-        columnFilter.filter((item) => item !== e.target.textContent)
-      );
+    else setColumnFilter(columnFilter.filter((item) => item !== value));
   };
 
+  console.log(columnFilter);
   return (
     <Box>
       <Autocomplete

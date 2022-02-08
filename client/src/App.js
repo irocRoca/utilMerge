@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import BasicTable from "./components/BasicTable";
 
 import UploadFile from "./components/UploadFile";
 
@@ -9,9 +10,6 @@ function App() {
   const [leftTable, setLeftTable] = useState(null);
   const [rightTable, setRightTable] = useState(null);
 
-  console.log(leftFile);
-  console.log(leftTable);
-
   return (
     <div className="App">
       <UploadFile
@@ -19,6 +17,8 @@ function App() {
         setFile={setLeftFile}
         setTable={setLeftTable}
       />
+
+      {leftTable && <BasicTable data={leftTable} />}
       {leftTable && (
         <table>
           <thead>
