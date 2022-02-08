@@ -4,6 +4,7 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
+  Tooltip,
 } from "@mui/material";
 import React from "react";
 
@@ -12,7 +13,7 @@ const RadioButtonRow = ({ value, setValue }) => {
     setValue(event.target.value);
   };
   return (
-    <FormControl>
+    <FormControl sx={{ marginY: 4 }}>
       <FormLabel id="demo-row-radio-buttons-group-label">
         Merge Method
       </FormLabel>
@@ -24,12 +25,14 @@ const RadioButtonRow = ({ value, setValue }) => {
         onChange={handleChange}
       >
         {joinFormats.map((item, index) => (
-          <FormControlLabel
-            key={index}
-            value={item}
-            control={<Radio />}
-            label={`${item.toUpperCase()}`}
-          />
+          <Tooltip title={item.title} key={index}>
+            <FormControlLabel
+              key={index}
+              value={item.name}
+              control={<Radio />}
+              label={`${item.name.toUpperCase()}`}
+            />
+          </Tooltip>
         ))}
       </RadioGroup>
     </FormControl>
@@ -38,4 +41,10 @@ const RadioButtonRow = ({ value, setValue }) => {
 
 export default RadioButtonRow;
 
-const joinFormats = ["left", "right", "outer", "inner", "cross"];
+const joinFormats = [
+  { name: "left", title: "All from first, matching from second" },
+  { name: "right", title: "All from second, matching from frist" },
+  { name: "outer", title: "All rows from both" },
+  { name: "inner", title: "Only matching rows" },
+  { name: "cross", title: "Creates the cartesian product" },
+];

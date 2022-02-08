@@ -3,12 +3,18 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" aria-label="delete" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const DisplayColumns = ({ columns, setColumnFilter, columnFilter, label }) => {
+const DisplayColumns = ({
+  columns,
+  setColumnFilter,
+  columnFilter,
+  label,
+  displayHelper,
+}) => {
   const handleColumnChange = (e) => {
     let value = e.target.textContent;
     if (e.target.tagName === "svg") {
@@ -41,7 +47,7 @@ const DisplayColumns = ({ columns, setColumnFilter, columnFilter, label }) => {
             {option}
           </li>
         )}
-        style={{ width: 300 }}
+        style={{ width: 400, margin: " 16px auto" }}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -50,6 +56,11 @@ const DisplayColumns = ({ columns, setColumnFilter, columnFilter, label }) => {
           />
         )}
       />
+      {displayHelper && (
+        <Typography variant="overline" display="block" gutterBottom>
+          If invalid columns update index of column headers
+        </Typography>
+      )}
     </Box>
   );
 };

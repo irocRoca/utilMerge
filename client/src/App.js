@@ -1,4 +1,4 @@
-import { Button, Container, Paper } from "@mui/material";
+import { Button, Container, Divider, Paper } from "@mui/material";
 import { useContext, useState } from "react";
 import "./App.css";
 import BasicTable from "./components/BasicTable";
@@ -45,16 +45,19 @@ function App() {
           <UploadFile
             file={leftFile}
             setFile={setLeftFile}
+            table={leftTable}
             setTable={setLeftTable}
             index={1}
             columnFilter={leftFilter}
             setColumnFilter={setLeftFilter}
             title="Upload File"
           />
+          <Divider variant="middle" sx={{ marginTop: 2, marginBottom: 4 }} />
 
           <UploadFile
             file={rightFile}
             setFile={setRightFile}
+            table={rightTable}
             setTable={setRightTable}
             index={2}
             columnFilter={rightFilter}
@@ -62,7 +65,7 @@ function App() {
             title="Upload secondary file"
           />
           <RadioButtonRow value={value} setValue={setValue} />
-          {leftFilter.length && rightFilter.length && (
+          {!!leftFilter.length && !!rightFilter.length && (
             <DisplayColumns
               columns={leftFilter.filter((item) => rightFilter.includes(item))}
               setColumnFilter={setMatchOn}
@@ -70,7 +73,11 @@ function App() {
               label="Match on"
             />
           )}
-          <Button variant="outlined" onClick={handleParseFiles}>
+          <Button
+            variant="outlined"
+            onClick={handleParseFiles}
+            disabled={!leftTable || !rightTable}
+          >
             Merge Files
           </Button>
         </Paper>

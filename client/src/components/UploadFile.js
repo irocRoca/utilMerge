@@ -1,5 +1,14 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Collapse,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { useState } from "react";
 import FileDetails from "./FileDetails";
@@ -9,6 +18,7 @@ import DisplayColumns from "./DisplayColumns";
 const UploadFile = ({
   file,
   setFile,
+  table,
   setTable,
   index,
   columnFilter,
@@ -17,6 +27,7 @@ const UploadFile = ({
 }) => {
   const [columns, setColumns] = useState(null);
   const [headerRow, setHeaderRow] = useState(1);
+  const [show, setShow] = useState(false);
 
   const handleColumnSubmit = async (e) => {
     e.preventDefault();
@@ -34,6 +45,7 @@ const UploadFile = ({
     data.append("columns", columnFilter);
     data.append("colIndex", headerRow - 1);
     const res = await getTable(data);
+    setShow(!show);
     setTable(res);
   };
 
@@ -58,13 +70,13 @@ const UploadFile = ({
           {title ? title : "Upload File"}
         </Typography>
         <FileDetails setFile={setFile} file={file} index={index} />
-        <Box sx={{ width: 200, maxWidth: "100%", marginTop: 2 }}>
+        <Box sx={{ width: 200, maxWidth: "100%", margin: "24px auto" }}>
           <TextField
             id="outlined-number"
-            label="Number"
+            label="Index of Column Headers"
             type="number"
             size="small"
-            helperText="If columns not found update this value"
+            // helperText="If invalid columns update this value"
             fullWidth
             value={headerRow}
             onChange={(e) => setHeaderRow(e.target.value)}
@@ -82,14 +94,41 @@ const UploadFile = ({
             columns={columns}
             columnFilter={columnFilter}
             setColumnFilter={setColumnFilter}
+            displayHelper
           />
           <form
             method="post"
             encType="multipart/form-data"
             onSubmit={handleParseFile}
           >
-            <button type="submit">Parse based on Columns</button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="success"
+              sx={{ marginBottom: 4 }}
+            >
+              Parse based on Columns
+            </Button>
           </form>
+          <Collapse in={show}>
+            <Alert
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setShow(false);
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              sx={{ mb: 2 }}
+            >
+              Sucessfully Parsed File.
+            </Alert>
+          </Collapse>
         </div>
       )}
     </>
