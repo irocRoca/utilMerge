@@ -1,9 +1,21 @@
-from flask import Flask, send_from_directory, request, jsonify
+from flask import Flask, Response, send_from_directory, request, make_response
 import pandas as pd
 import sys
 
 app = Flask(__name__, static_folder="client/build", static_url_path="")
 
+
+
+@app.route("/api/download", methods=["POST"])
+def download():
+        if request.method == 'POST':
+            content = request.json
+            df = pd.DataFrame.from_dict(content['table'])
+            resp = make_response(df.to_csv())
+            resp.headers["Content-Disposition"] = "attachment; filename=export.csv"
+            resp.headers["Content-Type"] = "text/csv"
+            return resp
+        return {"Error": "Invalid"}
 
 @app.route("/api/join", methods=["POST"])
 def join():
@@ -14,7 +26,7 @@ def join():
         ldf = pd.DataFrame.from_dict(content['ldf'])
         rdf = pd.DataFrame.from_dict(content['rdf'])
         res = ldf.merge(rdf, how=joinMethod, on=matchOn)
-        print(res, file=sys.stderr)
+        #print(res, file=sys.stderr)
         result = res.to_json()
         return {"results": result}
 
@@ -25,7 +37,6 @@ def columns():
             return {"Error": "No File Received"}
         file = request.files['file']
         index = int(request.form['colIndex'])
-        #print(type(index), file=sys.stderr)
         df = pd.read_csv(file, header=index)
         res = list(df.columns)
         return {"columns": res}
@@ -39,8 +50,6 @@ def parse():
         index = int(request.form['colIndex'])
         data = request.form['columns'].split(",")
         df = pd.read_csv(file, header=index , usecols=data)
-        print(type(df.to_json), file=sys.stderr)
-        #print(count, file=sys.stderr)
         return df.to_json()
 
 

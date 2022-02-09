@@ -46,5 +46,4 @@ const joinFormats = [
   { name: "right", title: "All from second, matching from frist" },
   { name: "outer", title: "All rows from both" },
   { name: "inner", title: "Only matching rows" },
-  { name: "cross", title: "Creates the cartesian product" },
 ];

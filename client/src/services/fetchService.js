@@ -28,3 +28,12 @@ export const getMergedTable = async (data) => {
     console.log(err);
   }
 };
+
+export const getCsvFile = async (data) => {
+  try {
+    const res = await axios.post("api/download", data);
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+};

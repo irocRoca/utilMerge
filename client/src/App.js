@@ -1,5 +1,5 @@
 import { Button, Container, Divider, Paper } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import "./App.css";
 import BasicTable from "./components/BasicTable";
 import DisplayColumns from "./components/DisplayColumns";
@@ -7,9 +7,10 @@ import RadioButtonRow from "./components/RadioButtonRow";
 
 import UploadFile from "./components/UploadFile";
 import { MyContext } from "./context/FileContext";
-import { getMergedTable } from "./services/fetchService";
+import { getCsvFile, getMergedTable } from "./services/fetchService";
 
 function App() {
+  const fileEle = useRef(null);
   const [value, setValue] = useState("inner");
   const [leftFilter, setLeftFilter] = useState([]);
   const [rightFilter, setRightFilter] = useState([]);
@@ -36,6 +37,19 @@ function App() {
     };
     const res = await getMergedTable(data);
     setMergedTable(JSON.parse(res.results));
+  };
+
+  const handleDownloadFile = async () => {
+    try {
+      const res = await getCsvFile({ table: mergedTable });
+      const blob = new Blob([res], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      fileEle.current.setAttribute("href", url);
+      fileEle.current.setAttribute("download", "export.csv");
+      fileEle.current.click();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -80,6 +94,18 @@ function App() {
           >
             Merge Files
           </Button>
+          <Button
+            variant="outlined"
+            onClick={handleDownloadFile}
+            disabled={!mergedTable}
+          >
+            Download File
+          </Button>
+          {
+            <a ref={fileEle} href="/" style={{ display: "none" }} hidden>
+              File Download
+            </a>
+          }
         </Paper>
       </Container>
       {mergedTable && <BasicTable data={mergedTable} />}
