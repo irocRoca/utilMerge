@@ -7,11 +7,25 @@ const Input = styled("input")({
   display: "none",
 });
 
-const FileDetails = ({ setFile, file, index }) => {
+const FileDetails = ({
+  setFile,
+  file,
+  index,
+  setColumns,
+  columns,
+  setColumnFilter,
+}) => {
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFile(file);
+    const incomingfile = e.target.files[0];
+    if (incomingfile) {
+      setFile(incomingfile);
+      if (columns != null && incomingfile.name !== file?.name) {
+        setColumns(null);
+        setColumnFilter(null);
+      }
+    } else {
+      setFile(null);
+      setColumns(null);
     }
   };
 

@@ -57,7 +57,12 @@ const DisplayColumns = ({
         )}
       />
       {displayHelper && (
-        <Typography variant="overline" display="block" gutterBottom>
+        <Typography
+          variant="overline"
+          display="block"
+          gutterBottom
+          sx={{ color: "#7c8083" }}
+        >
           If invalid columns update index of column headers
         </Typography>
       )}

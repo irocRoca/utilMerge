@@ -1,4 +1,4 @@
-import { Button, Container, Divider, Paper } from "@mui/material";
+import { Button, Container, Divider, Paper, Typography } from "@mui/material";
 import { useContext, useState, useRef } from "react";
 import "./App.css";
 import BasicTable from "./components/BasicTable";
@@ -16,6 +16,8 @@ function App() {
   const [rightFilter, setRightFilter] = useState([]);
   const [matchOn, setMatchOn] = useState([]);
   const [mergedTable, setMergedTable] = useState(null);
+  const [leftColumns, setLeftColumns] = useState(null);
+  const [rightColumns, setRightColumns] = useState(null);
 
   const {
     leftFile,
@@ -52,6 +54,13 @@ function App() {
     }
   };
 
+  const resetFields = () => {
+    setLeftFile(null);
+    setRightFile(null);
+    setLeftTable(null);
+    setRightTable(null);
+  };
+
   return (
     <div className="App">
       <Container maxWidth="sm" sx={{ marginY: 6 }}>
@@ -65,47 +74,64 @@ function App() {
             columnFilter={leftFilter}
             setColumnFilter={setLeftFilter}
             title="Upload File"
+            setColumns={setLeftColumns}
+            columns={leftColumns}
           />
-          <Divider variant="middle" sx={{ marginTop: 2, marginBottom: 4 }} />
 
-          <UploadFile
-            file={rightFile}
-            setFile={setRightFile}
-            table={rightTable}
-            setTable={setRightTable}
-            index={2}
-            columnFilter={rightFilter}
-            setColumnFilter={setRightFilter}
-            title="Upload secondary file"
-          />
-          <RadioButtonRow value={value} setValue={setValue} />
-          {!!leftFilter.length && !!rightFilter.length && (
-            <DisplayColumns
-              columns={leftFilter.filter((item) => rightFilter.includes(item))}
-              setColumnFilter={setMatchOn}
-              columnFilter={matchOn}
-              label="Match on"
-            />
+          {leftTable && (
+            <>
+              <Divider
+                variant="middle"
+                sx={{ marginTop: 2, marginBottom: 4 }}
+              />
+
+              <UploadFile
+                file={rightFile}
+                setFile={setRightFile}
+                table={rightTable}
+                setTable={setRightTable}
+                index={2}
+                columnFilter={rightFilter}
+                setColumnFilter={setRightFilter}
+                title="Upload secondary file"
+                setColumns={setRightColumns}
+                columns={rightColumns}
+              />
+              {rightTable && (
+                <>
+                  {!!leftFilter.length && !!rightFilter.length && (
+                    <DisplayColumns
+                      columns={leftFilter.filter((item) =>
+                        rightFilter.includes(item)
+                      )}
+                      setColumnFilter={setMatchOn}
+                      columnFilter={matchOn}
+                      label="Column to merge on"
+                    />
+                  )}
+                  <RadioButtonRow value={value} setValue={setValue} />
+                  <Button
+                    variant="outlined"
+                    onClick={handleParseFiles}
+                    disabled={!leftTable || !rightTable}
+                  >
+                    Merge Files
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={handleDownloadFile}
+                    disabled={!mergedTable}
+                  >
+                    Download File
+                  </Button>
+                  <a ref={fileEle} href="/" style={{ display: "none" }} hidden>
+                    File Download
+                  </a>
+                  <Button onClick={resetFields}>Reset Fields</Button>
+                </>
+              )}
+            </>
           )}
-          <Button
-            variant="outlined"
-            onClick={handleParseFiles}
-            disabled={!leftTable || !rightTable}
-          >
-            Merge Files
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={handleDownloadFile}
-            disabled={!mergedTable}
-          >
-            Download File
-          </Button>
-          {
-            <a ref={fileEle} href="/" style={{ display: "none" }} hidden>
-              File Download
-            </a>
-          }
         </Paper>
       </Container>
       {mergedTable && <BasicTable data={mergedTable} />}

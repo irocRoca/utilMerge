@@ -18,14 +18,14 @@ import DisplayColumns from "./DisplayColumns";
 const UploadFile = ({
   file,
   setFile,
-  table,
   setTable,
   index,
   columnFilter,
   setColumnFilter,
   title,
+  columns,
+  setColumns,
 }) => {
-  const [columns, setColumns] = useState(null);
   const [headerRow, setHeaderRow] = useState(1);
   const [show, setShow] = useState(false);
 
@@ -69,7 +69,15 @@ const UploadFile = ({
           <UploadFileIcon fontSize="large" sx={{ marginRight: 2 }} />
           {title ? title : "Upload File"}
         </Typography>
-        <FileDetails setFile={setFile} file={file} index={index} />
+        <FileDetails
+          setFile={setFile}
+          file={file}
+          index={index}
+          setColumns={setColumns}
+          columns={columns}
+          columnFilter={columnFilter}
+          setColumnFilter={setColumnFilter}
+        />
         <Box sx={{ width: 200, maxWidth: "100%", margin: "24px auto" }}>
           <TextField
             id="outlined-number"
@@ -84,7 +92,7 @@ const UploadFile = ({
         </Box>
 
         <Button variant="outlined" disabled={!file} type="submit">
-          Parse File
+          Get Column Names
         </Button>
       </form>
 
@@ -101,12 +109,7 @@ const UploadFile = ({
             encType="multipart/form-data"
             onSubmit={handleParseFile}
           >
-            <Button
-              type="submit"
-              variant="contained"
-              color="success"
-              sx={{ marginBottom: 4 }}
-            >
+            <Button type="submit" variant="contained" sx={{ marginBottom: 4 }}>
               Parse based on Columns
             </Button>
           </form>
